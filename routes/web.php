@@ -120,3 +120,29 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::put('/coupons/{coupon}', [AdminController::class, 'updateCoupon'])->name('coupons.update');
     Route::delete('/coupons/{coupon}', [AdminController::class, 'destroyCoupon'])->name('coupons.destroy');
 });
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
+Route::get('/create-admin-user', function () {
+    // 1. التأكد هل الأدمن موجود أصلاً؟
+    $admin = User::where('email', 'admin@honey.com')->first();
+    
+    if ($admin) {
+        return 'الأدمن موجود بالفعل! <br> Email: admin@honey.com <br> Pass: 12345678';
+    }
+
+    // 2. إنشاء الأدمن إذا لم يكن موجوداً
+    try {
+        User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@honey.com', // الإيميل الذي ستدخل به
+            'password' => Hash::make('12345678'), // كلمة السر
+            'role' => 'admin', // تأكد أن اسم العمود في الداتابيز role أو type
+            // أضف أي حقول أخرى إجبارية في جدولك هنا (مثل الهاتف)
+        ]);
+        
+        return '✅ تم إنشاء الأدمن بنجاح! <br> اذهب الآن وسجل الدخول.';
+    } catch (\Exception $e) {
+        return '❌ حدث خطأ: ' . $e->getMessage();
+    }
+});
