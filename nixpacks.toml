@@ -1,22 +1,14 @@
-# Railway Nixpacks Configuration for Laravel
-# Provider: PHP
-
 [phases.setup]
-nixPkgs = ["php82", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "php82Extensions.xml", "php82Extensions.curl", "php82Extensions.gd", "php82Extensions.zip", "php82Extensions.fileinfo", "php82Extensions.bcmath", "php82Extensions.tokenizer"]
+nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mbstring", "php82Extensions.xml", "php82Extensions.curl", "php82Extensions.gd", "php82Extensions.zip", "php82Extensions.fileinfo", "php82Extensions.bcmath"]
 
 [phases.install]
-cmds = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer || true",
-    "php /usr/local/bin/composer install --no-dev --optimize-autoloader --ignore-platform-reqs || composer install --no-dev --optimize-autoloader --ignore-platform-reqs"
-]
+cmds = ["composer install --no-dev --optimize-autoloader"]
 
 [phases.build]
 cmds = [
-    "mkdir -p storage/framework/{sessions,views,cache}",
-    "chmod -R 775 storage bootstrap/cache || true",
     "php artisan storage:link || true",
     "php artisan config:cache || true",
-    "php artisan route:cache || true",
+    "php artisan route:cache || true", 
     "php artisan view:cache || true"
 ]
 
