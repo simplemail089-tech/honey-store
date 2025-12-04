@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production (Railway, Render, etc.)
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+        
         // مشاركة الأقسام مع جميع الصفحات للـ Mega Menu
         View::composer('shop.layout', function ($view) {
             $menuCategories = Category::where('is_active', true)
