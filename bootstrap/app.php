@@ -10,15 +10,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        // Trust all proxies (Railway, Render, etc.)
+    ->withMiddleware(function (Middleware $middleware) {
+        // 👇 هذا السطر هو الأهم على الإطلاق لـ Railway
         $middleware->trustProxies(at: '*');
-        
-        // تسجيل middleware للأدمن
-        $middleware->alias([
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
